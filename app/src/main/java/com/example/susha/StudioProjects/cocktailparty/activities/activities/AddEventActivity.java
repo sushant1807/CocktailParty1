@@ -7,8 +7,10 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -22,6 +24,7 @@ import android.widget.TimePicker;
 
 import com.example.susha.StudioProjects.cocktailparty.R;
 import com.example.susha.StudioProjects.cocktailparty.activities.model.Event;
+import com.google.firebase.FirebaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -57,6 +60,7 @@ public class AddEventActivity extends AppCompatActivity {
         time= (EditText) findViewById(R.id.time);
         imageView = (ImageView) findViewById(R.id.image);
         submit.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onClick(View v) {
                 submit();
@@ -139,6 +143,7 @@ public class AddEventActivity extends AppCompatActivity {
         });*/
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     private void submit() {
         String title1=title.getText().toString();
         String desc=description.getText().toString();
@@ -153,8 +158,9 @@ public class AddEventActivity extends AppCompatActivity {
         Log.d("BHARATH111",""+event);
         Log.d("BHARATH111",""+dtf.format(now).toString());
         mDatabase.child("Events").child(dtf.format(now).toString()).setValue(event);
-
-
+        Intent i = new Intent(AddEventActivity.this,UsersActivity.class);
+        startActivity(i);
+        finish();
     }
 
 
