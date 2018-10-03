@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "319464880053",
+    "firebase_url": "https://cocktailparty-d9007.firebaseio.com",
+    "project_id": "cocktailparty-d9007",
+    "storage_bucket": "cocktailparty-d9007.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:319464880053:android:0d35159497f239c7",
+        "android_client_info": {
+          "package_name": "com.example.susha.StudioProjects.cocktailparty"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "319464880053-p2vm46tjiur9jcvg27nl0ichihbgiq1b.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDYZNyKCOjgcvjPfzT7n_GtYLqoapTPXNs"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

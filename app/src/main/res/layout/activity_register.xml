@@ -31,11 +31,11 @@
                 android:id="@+id/textInputEditTextName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/hint_name"
-                android:textColorHint="@color/colorText"
+                android:hint="Name"
+                android:textColorHint="#fff"
                 android:inputType="text"
                 android:maxLines="1"
-                android:textColor="@color/colorText" />
+                android:textColor="#fff" />
         </android.support.design.widget.TextInputLayout>
 
         <android.support.design.widget.TextInputLayout
@@ -48,11 +48,11 @@
                 android:id="@+id/textInputEditTextEmail"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/hint_email"
-                android:textColorHint="@color/colorText"
+                android:hint="Email"
+                android:textColorHint="#fff"
                 android:inputType="text"
                 android:maxLines="1"
-                android:textColor="@color/colorText" />
+                android:textColor="#fff" />
         </android.support.design.widget.TextInputLayout>
 
         <android.support.design.widget.TextInputLayout
@@ -65,11 +65,11 @@
                 android:id="@+id/textInputEditTextPassword"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/hint_password"
-                android:textColorHint="@color/colorText"
+                android:hint="password"
+                android:textColorHint="#fff"
                 android:inputType="textPassword"
                 android:maxLines="1"
-                android:textColor="@color/colorText" />
+                android:textColor="#fff" />
         </android.support.design.widget.TextInputLayout>
 
         <android.support.design.widget.TextInputLayout
@@ -82,11 +82,11 @@
                 android:id="@+id/textInputEditTextConfirmPassword"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/hint_confirm_password"
-                android:textColorHint="@color/colorText"
+                android:hint="confirm password"
+                android:textColorHint="#fff"
                 android:inputType="textPassword"
                 android:maxLines="1"
-                android:textColor="@color/colorText" />
+                android:textColor="#fff" />
         </android.support.design.widget.TextInputLayout>
 
         <android.support.v7.widget.AppCompatButton
@@ -94,9 +94,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="40dp"
-            android:textColor="@color/colorText"
-            android:background="@color/colorTextHint"
-            android:text="@string/text_register" />
+            android:textColor="#ffffff"
+            android:background="#51d8c7"
+            android:text="Register" />
 
         <android.support.v7.widget.AppCompatTextView
             android:id="@+id/appCompatTextViewLoginLink"
@@ -104,9 +104,9 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="30dp"
             android:gravity="center"
-            android:text="@string/text_member"
+            android:text="Member!"
             android:textSize="16sp"
-            android:textColor="@color/colorText" />
+            android:textColor="#ffffff" />
 
     </android.support.v7.widget.LinearLayoutCompat>
 

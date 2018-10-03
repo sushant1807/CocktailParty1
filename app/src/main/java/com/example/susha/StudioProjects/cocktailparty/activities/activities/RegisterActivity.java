@@ -1,6 +1,8 @@
 package com.example.susha.StudioProjects.cocktailparty.activities.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
@@ -9,11 +11,16 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.AppCompatTextView;
 import android.view.View;
+import android.widget.Toast;
 
 import com.example.susha.StudioProjects.cocktailparty.R;
 import com.example.susha.StudioProjects.cocktailparty.activities.helper.InputValidation;
 import com.example.susha.StudioProjects.cocktailparty.activities.model.User;
 import com.example.susha.StudioProjects.cocktailparty.activities.sql.DatabaseHelper;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
 
 public class RegisterActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -37,6 +44,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     private InputValidation inputValidation;
     private DatabaseHelper databaseHelper;
     private User user;
+    private FirebaseAuth auth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
@@ -51,6 +59,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
 
     private void initViews(){
         nestedScrollView = (NestedScrollView) findViewById(R.id.nestedScrollView);
+        auth = FirebaseAuth.getInstance();
 
         textInputLayoutName = (TextInputLayout) findViewById(R.id.textInputLayoutName);
         textInputLayoutEmail = (TextInputLayout) findViewById(R.id.textInputLayoutEmail);
@@ -91,39 +100,56 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     }
 
     private void postDataToSQLite(){
-        if (!inputValidation.isInputEditTextFilled(textInputEditTextName, textInputLayoutName, getString(R.string.error_message_name))) {
+        if (!inputValidation.isInputEditTextFilled(textInputEditTextName, textInputLayoutName, "Nod Name!")) {
             return;
         }
-        if (!inputValidation.isInputEditTextFilled(textInputEditTextEmail, textInputLayoutEmail, getString(R.string.error_message_email))) {
+        if (!inputValidation.isInputEditTextFilled(textInputEditTextEmail, textInputLayoutEmail, "No Email")) {
             return;
         }
-        if (!inputValidation.isInputEditTextEmail(textInputEditTextEmail, textInputLayoutEmail, getString(R.string.error_message_email))) {
+        if (!inputValidation.isInputEditTextEmail(textInputEditTextEmail, textInputLayoutEmail,"Enter a valid Email")) {
             return;
         }
-        if (!inputValidation.isInputEditTextFilled(textInputEditTextPassword, textInputLayoutPassword, getString(R.string.error_message_password))) {
+        if (!inputValidation.isInputEditTextFilled(textInputEditTextPassword, textInputLayoutPassword, "Enter a password")) {
             return;
         }
         if (!inputValidation.isInputEditTextMatches(textInputEditTextPassword, textInputEditTextConfirmPassword,
-                textInputLayoutConfirmPassword, getString(R.string.error_password_match))) {
+                textInputLayoutConfirmPassword, "Passwords does not match")) {
             return;
         }
 
-        if (!databaseHelper.checkUser(textInputEditTextEmail.getText().toString().trim())) {
+        if (true) {
 
             user.setName(textInputEditTextName.getText().toString().trim());
             user.setEmail(textInputEditTextEmail.getText().toString().trim());
             user.setPassword(textInputEditTextPassword.getText().toString().trim());
 
-            databaseHelper.addUser(user);
+            auth.createUserWithEmailAndPassword(textInputEditTextEmail.getText().toString().trim(), textInputEditTextPassword.getText().toString().trim())
+                    .addOnCompleteListener(RegisterActivity.this, new OnCompleteListener<AuthResult>() {
+                        @Override
+                        public void onComplete(@NonNull Task<AuthResult> task) {
+                            Toast.makeText(RegisterActivity.this, "createUserWithEmail:onComplete:" + task.isSuccessful(), Toast.LENGTH_SHORT).show();
+                           // progressBar.setVisibility(View.GONE);
+                            // If sign in fails, display a message to the user. If sign in succeeds
+                            // the auth state listener will be notified and logic to handle the
+                            // signed in user can be handled in the listener.
+                            if (!task.isSuccessful()) {
+                                Toast.makeText(RegisterActivity.this, "Authentication failed." + task.getException(),
+                                        Toast.LENGTH_SHORT).show();
+                            } else {
+                                startActivity(new Intent(RegisterActivity.this, LoginActivity1.class));
+                                finish();
+                            }
+                        }
+                    });
 
             // Snack Bar to show success message that record saved successfully
-            Snackbar.make(nestedScrollView, getString(R.string.success_message), Snackbar.LENGTH_LONG).show();
+            Snackbar.make(nestedScrollView, "Successfully Logged in..!!", Snackbar.LENGTH_LONG).show();
             emptyInputEditText();
 
 
         } else {
             // Snack Bar to show error message that record already exists
-            Snackbar.make(nestedScrollView, getString(R.string.error_email_exists), Snackbar.LENGTH_LONG).show();
+            Snackbar.make(nestedScrollView, "Email already exiss..!!", Snackbar.LENGTH_LONG).show();
         }
 
 
