@@ -22,7 +22,7 @@
             android:layout_marginBottom="10dp"
             android:background="@color/cardview_light_background"
             android:hint="Enter Email"
-            android:text="bharath.psc@gmail.com"
+            android:text="larezidents@gmail.com"
             android:inputType="textEmailAddress"
             android:padding="10dp"
             android:singleLine="true"
@@ -45,6 +45,15 @@
 
         <!-- Login Button -->
 
+        <CheckBox
+            android:id="@+id/keepLogin"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:checked="true"
+            android:gravity="center"
+            android:text="Keep me Logged in"
+            android:textSize="15sp"/>
         <Button
             android:id="@+id/btnLogin"
             android:layout_width="fill_parent"
@@ -53,6 +62,7 @@
             android:background="#eceef1"
             android:text="Login"
             android:textColor="#26ae90" />
+
 
         <!-- Link to Login Screen -->
 

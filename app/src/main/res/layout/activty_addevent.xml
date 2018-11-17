@@ -9,8 +9,13 @@
     android:paddingLeft="10dp"
     android:paddingRight="10dp">
 
-
-
+    <ScrollView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent">
+<RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
     <TextView
         android:text="Title"
         android:layout_width="150dp"
@@ -26,24 +31,6 @@
         android:layout_toRightOf="@+id/tv1"
         android:layout_marginLeft="20dp"/>
 
-    <TextView
-        android:text="Genre"
-        android:layout_width="150dp"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="16dp"
-        android:layout_marginTop="10dp"
-        android:layout_below="@+id/tv1"
-        android:id="@+id/tv2"
-        android:textSize="30dp"
-        />
-    <EditText
-        android:layout_width="150dp"
-        android:id="@+id/genre"
-        android:layout_marginTop="10dp"
-        android:layout_below="@+id/title"
-        android:layout_height="wrap_content"
-        android:layout_toRightOf="@+id/tv2"
-        android:layout_marginLeft="20dp"/>
 
     <TextView
         android:text="Description"
@@ -51,7 +38,7 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="16dp"
         android:layout_marginTop="30dp"
-        android:layout_below="@+id/tv2"
+        android:layout_below="@+id/tv1"
         android:id="@+id/tv3"
         android:textSize="20dp"
         />
@@ -60,7 +47,7 @@
         android:id="@+id/description"
         android:maxLines="5"
         android:layout_marginTop="10dp"
-        android:layout_below="@+id/genre"
+        android:layout_below="@+id/title"
         android:layout_height="wrap_content"
         android:layout_toRightOf="@+id/tv3"
         android:layout_marginLeft="20dp"/>
@@ -125,7 +112,7 @@
 
         android:layout_marginTop="10dp"
         android:layout_below="@+id/time"
-
+        android:src="@drawable/noimageavailable"
         android:layout_toRightOf="@+id/tv6"
         android:layout_marginLeft="20dp"></ImageView>
 
@@ -141,4 +128,6 @@
         android:layout_below="@+id/image"
         android:layout_centerInParent="true"/>
 
+</RelativeLayout>
+    </ScrollView>
 </RelativeLayout>

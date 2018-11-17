@@ -28,6 +28,8 @@ import com.example.susha.StudioProjects.cocktailparty.activities.model.Movie;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -47,6 +49,7 @@ public class UsersActivity extends AppCompatActivity {
     DatabaseReference myRef ;
     List<Event> list;
     public Query query;
+    private static TextView username;
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
@@ -57,6 +60,11 @@ public class UsersActivity extends AppCompatActivity {
 
 //        mTopToolbar = (Toolbar) findViewById(R.id.my_toolbar);
 //        setSupportActionBar(mTopToolbar);
+        username=(TextView) findViewById(R.id.username);
+        String email= FirebaseAuth.getInstance().getCurrentUser().getEmail().toString();
+        int index= email.indexOf("@");
+        username.setText(email.substring(0,index).toUpperCase());
+        username.setTextSize(25);
         recycle = (RecyclerView) findViewById(R.id.recycler_view);
         database = FirebaseDatabase.getInstance();
         myRef = database.getReference("Events");
@@ -75,18 +83,25 @@ public class UsersActivity extends AppCompatActivity {
                         Log.d("bharath11--", dataSnapshot2.toString());
                         Log.d("bharath11--", dataSnapshot2.getKey().toString());
                         Event value = dataSnapshot2.getValue(Event.class);
-                        Event fire = new Event();
+                       /* Event fire = new Event();
+                        String cat= value.getCreatedat();
+                        String email= value.getEmail();
+
                         String name = value.getTitle();
                         String address = value.getYear();
                         String dop = value.getTime();
                         String desc = value.getDescription();
-
+                        String image= value.getImage();
+                        fire.setCreatedat(cat);
+                        fire.setEmail(email);
+Log.d("bharathImage",""+image);
                         fire.setTitle(name);
+                        fire.setImage(image);
                         fire.setYear(address);
                         fire.setTime(dop);
-                        fire.setDescription(desc);
+                        fire.setDescription(desc);*/
 
-                        list.add(fire);
+                        list.add(value);
 
                     }}
                 }
@@ -127,45 +142,7 @@ public class UsersActivity extends AppCompatActivity {
         recycle.setAdapter(recyclerAdapter);
     }
 
-    private void prepareMovieData() {
-        Movie movie = new Movie("Paris Beaches - Paris Plages", "September", "2018");
-        movieList.add(movie);
 
-        movie = new Movie("Rock en Seine Music Festival", "August", "2018");
-        movieList.add(movie);
-
-        movie = new Movie("Classique au Vert Music Festival", "August", "2018");
-        movieList.add(movie);
-
-        movie = new Movie("Liberation of Paris Festivities -  74th Anniversary Celebration", "September", "2018");
-        movieList.add(movie);
-
-        movie = new Movie("Paris Beaches - Paris Plages", "September", "2018");
-        movieList.add(movie);
-
-        movie = new Movie("Rock en Seine Music Festival", "August", "2018");
-        movieList.add(movie);
-
-        movie = new Movie("Classique au Vert Music Festival", "August", "2018");
-        movieList.add(movie);
-
-        movie = new Movie("Liberation of Paris Festivities -  74th Anniversary Celebration", "September", "2018");
-        movieList.add(movie);
-
-        movie = new Movie("Paris Beaches - Paris Plages", "September", "2018");
-        movieList.add(movie);
-
-        movie = new Movie("Rock en Seine Music Festival", "August", "2018");
-        movieList.add(movie);
-
-        movie = new Movie("Classique au Vert Music Festival", "August", "2018");
-        movieList.add(movie);
-
-        movie = new Movie("Liberation of Paris Festivities -  74th Anniversary Celebration", "September", "2018");
-        movieList.add(movie);
-
-        mAdapter.notifyDataSetChanged();
-    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

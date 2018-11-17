@@ -1,8 +1,13 @@
 package com.example.susha.StudioProjects.cocktailparty.activities.helper;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
+import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -14,8 +19,15 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.susha.StudioProjects.cocktailparty.R;
+import com.example.susha.StudioProjects.cocktailparty.activities.activities.AddEventActivity;
+import com.example.susha.StudioProjects.cocktailparty.activities.activities.EditEvent;
+import com.example.susha.StudioProjects.cocktailparty.activities.activities.UsersActivity;
 import com.example.susha.StudioProjects.cocktailparty.activities.model.Event;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -30,20 +42,27 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MyViewHold
 
 
     public MoviesAdapter(List<Event> list, Context context) {
+        Collections.reverse(list);
         this.list = list;
         this.mContext = context;
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
         public TextView title, count;
-        public ImageView thumbnail, overflow;
+        public ImageView image;
+        public ImageView thumbnail,like;
+        public TextView overflow,likes;
 
         public MyViewHolder(View view) {
             super(view);
+            //image= (ImageView) view.findViewById(R.id.backdrop);
             title = (TextView) view.findViewById(R.id.title);
             count = (TextView) view.findViewById(R.id.count);
+            likes = (TextView) view.findViewById(R.id.likes);
             thumbnail = (ImageView) view.findViewById(R.id.thumbnail);
-            overflow = (ImageView) view.findViewById(R.id.overflow);
+            like = (ImageView) view.findViewById(R.id.like);
+            overflow = (TextView) view.findViewById(R.id.overflow);
+
         }
     }
 
@@ -60,17 +79,73 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MyViewHold
 
     @Override
     public void onBindViewHolder(final MyViewHolder holder, int position) {
-        Event album = list.get(position);
+        final Event album = list.get(position);
+        //Event event = album;
+        int likesize= album.getLikes().size();
         holder.title.setText(album.getTitle()+"     ---     "+album.getDescription());
         holder.count.setText(album.getYear()+ "       "+album.getTime());
 
+        holder.likes.setText(likesize-1+" liked this");
+        if(album.getLikes().contains(FirebaseAuth.getInstance().getCurrentUser().getUid().toString()))
+        {
+            Glide.with(mContext).load(R.drawable.liked).into(holder.like);
+            holder.like.setClickable(false);
+            holder.like.setEnabled(false);
+        }
+        holder.like.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Glide.with(mContext).load(R.drawable.liked).into(holder.like);
+                holder.like.setClickable(false);
+                List<String> likedId = album.getLikes();
+                likedId.add(FirebaseAuth.getInstance().getCurrentUser().getUid().toString());
+                album.setLikes(likedId);
+                DatabaseReference updateData = FirebaseDatabase.getInstance()
+                        .getReference();
+                updateData.child("Events")
+                        .child(album.getCreatedat().toString()).setValue(album);
+
+            }
+        });
+
+
+        if(!FirebaseAuth.getInstance().getCurrentUser().getEmail().toString().equalsIgnoreCase(album.getEmail())){
+            String email= album.getEmail();
+
+            holder.overflow.setText(""+email.substring(0,email.indexOf("@")));
+            holder.overflow.setTextSize(15);
+           // holder.overflow.setVisibility(View.GONE);
+
+        }
+        if(!album.getImage().equalsIgnoreCase(""))
+        {
+        byte[] decodedString = Base64.decode(album.getImage(), Base64.DEFAULT);
+        Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+            Glide.with(mContext).load(decodedByte).into(holder.thumbnail);}
         // loading album cover using Glide library
-        Glide.with(mContext).load(R.drawable.party).into(holder.thumbnail);
+        else Glide.with(mContext).load(R.drawable.noimageavailable).into(holder.thumbnail);
 
         holder.overflow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 showPopupMenu(holder.overflow);
+            }
+        });
+        holder.overflow.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Intent i = new Intent(mContext,EditEvent.class);
+                i.putExtra("title", album.getTitle().toString());
+                i.putExtra("desc", album.getDescription().toString());
+                i.putExtra("date", album.getYear().toString());
+                i.putExtra("time", album.getTime().toString());
+                i.putExtra("createdat", album.getCreatedat().toString());
+                //i.putExtra("likes", album.getLikes());
+                 //i.putExtra("image", album.getImage().toString());
+                i.putExtra("email", album.getEmail().toString());
+                ((Activity) mContext).startActivityForResult(i,1);
+
             }
         });
     }

@@ -19,8 +19,8 @@
             <ImageView
                 android:id="@+id/thumbnail"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/album_cover_height"
-
+                android:layout_height="250dp"
+                android:src="@drawable/noimageavailable"
                 android:clickable="true"
                 android:scaleType="fitXY" />
 
@@ -45,15 +45,31 @@
                 android:paddingRight="@dimen/album_title_padding"
                 android:textSize="@dimen/songs_count" />
 
-            <ImageView
+            <TextView
                 android:id="@+id/overflow"
-                android:layout_width="@dimen/ic_album_overflow_width"
+                android:layout_width="wrap_content"
                 android:layout_height="@dimen/ic_album_overflow_height"
                 android:layout_alignParentRight="true"
                 android:layout_below="@id/thumbnail"
                 android:layout_marginTop="@dimen/ic_album_overflow_margin_top"
                 android:scaleType="centerCrop"
-                android:src="@drawable/baseline_add_white_24dp" />
+                android:text="Edit" />
+            <ImageView
+                android:id="@+id/like"
+                android:layout_width="70px"
+                android:layout_height="70px"
+                android:src="@drawable/like1"
+                android:layout_below="@+id/overflow"
+                android:layout_toStartOf="@+id/overflow"/>
+            <TextView
+                android:id="@+id/likes"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@+id/like"
+                android:layout_below="@+id/overflow"
+                android:layout_marginLeft="5px"
+                android:text=" likes"
+                android:textSize="10px"/>
 
         </RelativeLayout>
 

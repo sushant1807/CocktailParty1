@@ -10,6 +10,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Base64;
@@ -23,13 +24,18 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
+import com.bumptech.glide.Glide;
 import com.example.susha.StudioProjects.cocktailparty.R;
 import com.example.susha.StudioProjects.cocktailparty.activities.model.Event;
-import com.google.firebase.FirebaseError;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -41,17 +47,23 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 
-public class AddEventActivity extends AppCompatActivity {
+public class EditEvent extends AppCompatActivity {
     Calendar myCalendar ;
-    private static List<String> likes;
     EditText date,time,title,description;
     private static final int SELECT_PICTURE = 0;
     private ImageView imageView;
     private RatingBar ratingBar;
     TextView rvalue;
     private Button submit;
+    FirebaseDatabase database;
+    DatabaseReference myRef ;
+    List<Event> list;
+    public Query query;
     private DatabaseReference mDatabase;
     private String encodedImage="";
+    private String createdat="";
+    private static String email11="";
+    private static Event value;
 // ...
 
 
@@ -60,16 +72,37 @@ public class AddEventActivity extends AppCompatActivity {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activty_addevent);
+        String t1= getIntent().getStringExtra("title");
+        String desc= getIntent().getStringExtra("desc");
+        String time1= getIntent().getStringExtra("date");
+        String date12= getIntent().getStringExtra("time");
+        //String img= getIntent().getStringExtra("image");
+        createdat= getIntent().getStringExtra("createdat");
+        email11= getIntent().getStringExtra("email");
+        String img1="";
+        imageView = (ImageView) findViewById(R.id.image);
+
+       /* if(!img.equalsIgnoreCase(""))
+        {
+            byte[] decodedString = Base64.decode(img, Base64.DEFAULT);
+            Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+            imageView = (ImageView) findViewById(R.id.image);
+            imageView.setImageBitmap(decodedByte);
+        }*/
+        // loading album cover using Glide library
+
         submit= (Button) findViewById(R.id.submit);
         myCalendar = Calendar.getInstance();
-        likes=new ArrayList<String>();
-        likes.add("111111");
         date= (EditText) findViewById(R.id.date);
+        date.setText(date12);
         title= (EditText) findViewById(R.id.title);
+        title.setText(t1.trim());
         mDatabase = FirebaseDatabase.getInstance().getReference();
         description= (EditText) findViewById(R.id.description);
+        description.setText(desc);
         time= (EditText) findViewById(R.id.time);
-        imageView = (ImageView) findViewById(R.id.image);
+        time.setText(time1);
+
         submit.setOnClickListener(new View.OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
@@ -78,24 +111,24 @@ public class AddEventActivity extends AppCompatActivity {
             }
         });
         final DatePickerDialog.OnDateSetListener date1 = new DatePickerDialog.OnDateSetListener() {
-        @Override
-        public void onDateSet(DatePicker view, int year, int monthOfYear,
-                              int dayOfMonth) {
-            // TODO Auto-generated method stub
-            myCalendar.set(Calendar.YEAR, year);
-            myCalendar.set(Calendar.MONTH, monthOfYear);
-            myCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-            updateLabel();
-        }
+            @Override
+            public void onDateSet(DatePicker view, int year, int monthOfYear,
+                                  int dayOfMonth) {
+                // TODO Auto-generated method stub
+                myCalendar.set(Calendar.YEAR, year);
+                myCalendar.set(Calendar.MONTH, monthOfYear);
+                myCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+                updateLabel();
+            }
 
 
-    };
+        };
         date.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
                 // TODO Auto-generated method stub
-                new DatePickerDialog(AddEventActivity.this, date1, myCalendar
+                new DatePickerDialog(EditEvent.this, date1, myCalendar
                         .get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
                         myCalendar.get(Calendar.DAY_OF_MONTH)).show();
             }
@@ -123,11 +156,11 @@ public class AddEventActivity extends AppCompatActivity {
                 int hour = mcurrentTime.get(Calendar.HOUR_OF_DAY);
                 int minute = mcurrentTime.get(Calendar.MINUTE);
                 TimePickerDialog mTimePicker;
-                mTimePicker = new TimePickerDialog(AddEventActivity.this, new TimePickerDialog.OnTimeSetListener() {
+                mTimePicker = new TimePickerDialog(EditEvent.this, new TimePickerDialog.OnTimeSetListener() {
                     @Override
                     public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
                         if(selectedHour<12)
-                        time.setText( selectedHour + ":" + selectedMinute + " AM" );
+                            time.setText( selectedHour + ":" + selectedMinute + " AM" );
                         else
                             time.setText( selectedHour + ":" + selectedMinute + " PM" );
 
@@ -143,6 +176,45 @@ public class AddEventActivity extends AppCompatActivity {
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     private void submit() {
+        DatabaseReference mDatabase;
+
+        Log.d("remve","removed " +createdat);
+        int iend = createdat.indexOf("/");
+    String year="",month="",leftout="";
+        String subString;
+        if (iend != -1)
+        {
+            subString= createdat.substring(0 , iend);
+             year = subString;
+
+
+            String remaining = createdat.substring(iend+1 , createdat.length());
+            Log.d("remve","remaining " +remaining);
+            int iend1 = remaining.indexOf("/");
+            if(iend1!=1)
+            {
+                month=remaining.substring(0,iend1);
+                Log.d("remve","month " +month);
+                leftout= remaining.substring(iend1+1,remaining.length());
+                Log.d("remve","leftour "+leftout);
+
+            }
+
+        }
+        Log.d("remve",""+email11);
+        mDatabase = FirebaseDatabase.getInstance().getReference();
+        if(FirebaseAuth.getInstance().getCurrentUser().getEmail().toString().equalsIgnoreCase(email11)){
+            Log.d("remve"," value -->  "+ mDatabase.child("Events").child(year).child(month).getKey());
+
+
+            mDatabase.child("Events").child(year).child(month).child(leftout).removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
+                @Override
+                public void onComplete(@NonNull Task<Void> task) {
+                    Log.d("delete task status",""+task.isSuccessful());
+                }
+            });
+
+        }
         String title1=title.getText().toString();
         String desc=description.getText().toString();
         String date1=date.getText().toString();
@@ -150,17 +222,19 @@ public class AddEventActivity extends AppCompatActivity {
         String image="";
         String email=FirebaseAuth.getInstance().getCurrentUser().getEmail().toString();
         if(!encodedImage.equalsIgnoreCase("")){
-        image=encodedImage;}
+            image=encodedImage;}
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
         LocalDateTime now = LocalDateTime.now();
         Log.d("Image",""+image);
         String createdat= dtf.format(now).toString();
-        //System.out.println(dtf.format(now));
+        System.out.println(dtf.format(now));
+        List<String> likes= new ArrayList<String>();
+        likes.add("11111");
         Event event = new Event(title1,desc,time1,date1,image,email,createdat,likes);
         Log.d("BHARATH111",""+event);
         Log.d("BHARATH111",""+dtf.format(now).toString());
         mDatabase.child("Events").child(dtf.format(now).toString()).setValue(event);
-        Intent i = new Intent(AddEventActivity.this,UsersActivity.class);
+        Intent i = new Intent(EditEvent.this,UsersActivity.class);
         startActivity(i);
         finish();
     }
@@ -202,8 +276,8 @@ public class AddEventActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
             ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-                bitmap.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
-                byte[] byteArray = byteArrayOutputStream .toByteArray();
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
+            byte[] byteArray = byteArrayOutputStream .toByteArray();
             String encoded = Base64.encodeToString(byteArray, Base64.DEFAULT);
             encodedImage = encoded;
 
@@ -229,3 +303,5 @@ public class AddEventActivity extends AppCompatActivity {
     }
 
 }
+
+
