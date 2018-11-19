@@ -74,12 +74,33 @@
         android:layout_marginLeft="20dp"></EditText>
 
     <TextView
-        android:text="Pick a time - "
+        android:text="Place "
         android:layout_width="150dp"
         android:layout_height="wrap_content"
         android:layout_marginLeft="16dp"
         android:layout_marginTop="30dp"
         android:layout_below="@+id/tv4"
+        android:id="@+id/place"
+        android:textSize="20dp"
+        />
+    <EditText
+        android:layout_width="150dp"
+        android:id="@+id/place1"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_below="@+id/date"
+        android:clickable="true"
+
+        android:layout_toRightOf="@+id/place"
+        android:layout_marginLeft="20dp"></EditText>
+
+    <TextView
+        android:text="Pick a time - "
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="30dp"
+        android:layout_below="@+id/place"
         android:id="@+id/tv5"
         android:textSize="20dp"
         />
@@ -88,10 +109,9 @@
         android:id="@+id/time"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
-        android:layout_below="@+id/date"
+        android:layout_below="@+id/place1"
         android:clickable="true"
-        android:editable="false"
-        android:focusable="false"
+        android:focusable="true"
         android:layout_toRightOf="@+id/tv5"
         android:layout_marginLeft="20dp"></EditText>
 
@@ -105,6 +125,7 @@
         android:id="@+id/tv6"
         android:textSize="20dp"
         />
+
     <ImageView
         android:layout_width="75dp"
         android:id="@+id/image"

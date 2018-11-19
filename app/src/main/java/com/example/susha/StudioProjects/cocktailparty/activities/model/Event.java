@@ -10,17 +10,26 @@ public class Event {
     private String time;
     private String image;
     private String email;
+    private String place;
 
-    public String getCreatedat() {
+    public String getPlace() {
+        return place;
+    }
+
+    public void setPlace(String place) {
+        this.place = place;
+    }
+
+    public Object getCreatedat() {
         return createdat;
     }
 
-    public void setCreatedat(String createdat) {
-        this.createdat = createdat;
+    public void setCreatedat(Object createdat) {
+        this.createdat = createdat.toString();
     }
 
     private List<String> likes;
-    private String createdat;
+    private Object createdat;
 
     public String getTime() {
         return time;
@@ -54,14 +63,14 @@ public class Event {
         this.image = image;
     }
 
-    public Event(String title,  String description,String year,String time,String image, String email,String createdat,List<String> likes) {
+    public Event(String title,  String description,String year,String time,String image, String email,String createdat,String place,List<String> likes) {
         this.title = title;
         this.time = time;
         this.image = image;
         this.email=email;
         this.likes=likes;
         this.createdat=createdat;
-
+        this.place=place;
         this.year = year;
         this.description=description;
     }

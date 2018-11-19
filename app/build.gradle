@@ -34,6 +34,9 @@ dependencies {
     implementation  'com.google.firebase:firebase-auth:16.0.1'
     implementation 'com.google.firebase:firebase-database:16.0.1'
     // https://mvnrepository.com/artifact/com.github.bumptech.glide/glide
+    // https://mvnrepository.com/artifact/joda-time/joda-time
+    implementation group: 'joda-time', name: 'joda-time', version: '2.3'
+
     implementation group: 'com.github.bumptech.glide', name: 'glide', version: '4.8.0'
 
 

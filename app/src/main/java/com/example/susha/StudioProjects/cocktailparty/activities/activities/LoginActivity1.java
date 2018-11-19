@@ -28,6 +28,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -47,7 +48,7 @@ public class LoginActivity1 extends AppCompatActivity {
     private static final String TAG = RegisterActivity.class.getSimpleName();
     private Button btnLogin;
     private Button btnLinkToRegister;
-    private EditText inputEmail;
+    private EditText inputEmail,dname;
     private EditText inputPassword;
     private static ProgressDialog pDialog;
     private SessionManager session;
@@ -70,18 +71,33 @@ public class LoginActivity1 extends AppCompatActivity {
         if(sharedpreferences.getBoolean("islogin",false))
         {
             hideDialog();
-            String email= FirebaseAuth.getInstance().getCurrentUser().getEmail().toString();
-            int index= email.indexOf("@");
-            String email1=(email.substring(0,index));
-            Toast.makeText(LoginActivity1.this, "Welcome Back "+email1.toUpperCase(), Toast.LENGTH_LONG).show();
-            Intent intent = new Intent(LoginActivity1.this, UsersActivity.class);
-            startActivity(intent);
-            finish();
+            try {
+                String email = FirebaseAuth.getInstance().getCurrentUser().getEmail().toString();
+                int index = email.indexOf("@");
+                String email1 = (email.substring(0, index));
+                Toast.makeText(LoginActivity1.this, "Welcome Back " + email1.toUpperCase(), Toast.LENGTH_LONG).show();
+                Intent intent = new Intent(LoginActivity1.this, UsersActivity.class);
+                startActivity(intent);
+                finish();
+            }
+            catch(NullPointerException e)
+            {
+                editor.putBoolean("islogin",false);
+               /* Intent intent = new Intent(LoginActivity1.this, LoginActivity1.class);
+                startActivity(intent);
+                finish();*/
+
+            }
+            catch(Exception ge)
+            {
+                Log.e("Login Error",ge.getMessage().toString());
+            }
 
         }
         hideDialog();
 
 
+        dname = (EditText) findViewById(R.id.dname);
         inputEmail = (EditText) findViewById(R.id.email);
         inputPassword = (EditText) findViewById(R.id.password);
         btnLogin = (Button) findViewById(R.id.btnLogin);
@@ -101,7 +117,7 @@ public class LoginActivity1 extends AppCompatActivity {
             // User is already logged in. Take him to main activity
             Intent intent = new Intent(LoginActivity1.this, UsersActivity.class);
             startActivity(intent);
-            finish();
+            //finish();
         }
 
         // Login button Click Event
@@ -165,6 +181,7 @@ public class LoginActivity1 extends AppCompatActivity {
                             editor.putBoolean("islogin",true);
                             editor.apply();
                             editor.commit();}
+
 
 
                             Intent intent = new Intent(LoginActivity1.this, UsersActivity.class);

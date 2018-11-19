@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <ScrollView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:id="@+id/l1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true">
+    <ImageView
+        android:id="@+id/imgview"
+        android:layout_width="match_parent"
+        android:layout_height="400px"
+        android:src="@drawable/noimageavailable"/>
+    </RelativeLayout>
+    <RelativeLayout
+        android:id="@+id/l4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/l1">
+    <LinearLayout
+        android:id="@+id/l2"
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center_vertical"
+        android:layout_marginTop="50px"
+        android:layout_marginLeft="40px"
+        >
+        <TextView
+
+            android:id="@+id/title"
+            android:textColor="@color/SandyBrown"
+            android:text="Title"
+            android:textSize="50px"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <TextView
+            android:id="@+id/date"
+            android:textColor="@color/SandyBrown"
+            android:textSize="50px"
+            android:text="Date DD-MM-YYYY"
+            android:layout_marginTop="40px"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+
+
+    </LinearLayout>
+        <LinearLayout
+            android:id="@+id/l3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/l2"
+            android:orientation="vertical"
+            android:gravity="center_vertical"
+            android:layout_marginTop="50px"
+            android:layout_marginLeft="60px"
+            >
+            <TextView
+                android:id="@+id/time"
+                android:textColor="@color/SandyBrown"
+                android:textSize="50px"
+                android:text="TIME HH-MM-SS"
+                android:layout_marginTop="40px"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:id="@+id/place"
+                android:textColor="@color/SandyBrown"
+                android:textSize="50px"
+                android:text="Place "
+                android:layout_marginTop="40px"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+
+
+
+        </LinearLayout>
+
+
+        </RelativeLayout>
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/l6"
+        android:layout_below="@+id/l4"
+        android:layout_marginTop="60px"
+        android:layout_marginLeft="50px">
+        <TextView
+            android:id="@+id/desc"
+            android:textSize="60px"
+            android:text="Description"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+    </RelativeLayout>
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/l5"
+        android:layout_below="@+id/l6"
+        android:layout_marginTop="60px"
+        android:layout_marginLeft="50px">
+
+        <ImageView
+            android:id="@+id/like"
+            android:layout_width="150px"
+            android:layout_height="120px"
+            android:src="@drawable/liked"
+            android:layout_centerHorizontal="true"/>
+        <TextView
+            android:id="@+id/nLikes"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/like"
+            android:layout_centerInParent="true"
+            android:text="LIKE !"
+            android:textSize="40px"/>
+    </RelativeLayout>
+        </RelativeLayout>
+        </ScrollView>
+
+</RelativeLayout>

@@ -26,6 +26,7 @@ import android.widget.TimePicker;
 
 import com.bumptech.glide.Glide;
 import com.example.susha.StudioProjects.cocktailparty.R;
+import com.example.susha.StudioProjects.cocktailparty.activities.helper.Constants;
 import com.example.susha.StudioProjects.cocktailparty.activities.model.Event;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -44,12 +45,13 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
 public class EditEvent extends AppCompatActivity {
     Calendar myCalendar ;
-    EditText date,time,title,description;
+    private static EditText place1,date,time,title,description;
     private static final int SELECT_PICTURE = 0;
     private ImageView imageView;
     private RatingBar ratingBar;
@@ -76,11 +78,17 @@ public class EditEvent extends AppCompatActivity {
         String desc= getIntent().getStringExtra("desc");
         String time1= getIntent().getStringExtra("date");
         String date12= getIntent().getStringExtra("time");
-        //String img= getIntent().getStringExtra("image");
+        String place= getIntent().getStringExtra("place");
+        String img="";
+        img=Constants.getImage();
+        Log.d("image--->",""+img);
         createdat= getIntent().getStringExtra("createdat");
         email11= getIntent().getStringExtra("email");
         String img1="";
         imageView = (ImageView) findViewById(R.id.image);
+        byte[] decodedString = Base64.decode(img, Base64.DEFAULT);
+        Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+        Glide.with(getApplicationContext()).load(decodedByte).into(imageView);
 
        /* if(!img.equalsIgnoreCase(""))
         {
@@ -99,6 +107,8 @@ public class EditEvent extends AppCompatActivity {
         title.setText(t1.trim());
         mDatabase = FirebaseDatabase.getInstance().getReference();
         description= (EditText) findViewById(R.id.description);
+        place1= (EditText) findViewById(R.id.place1);
+        place1.setText(""+place);
         description.setText(desc);
         time= (EditText) findViewById(R.id.time);
         time.setText(time1);
@@ -219,18 +229,19 @@ public class EditEvent extends AppCompatActivity {
         String desc=description.getText().toString();
         String date1=date.getText().toString();
         String time1=time.getText().toString();
+        String place2=place1.getText().toString();
         String image="";
         String email=FirebaseAuth.getInstance().getCurrentUser().getEmail().toString();
         if(!encodedImage.equalsIgnoreCase("")){
             image=encodedImage;}
-        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
-        LocalDateTime now = LocalDateTime.now();
+        SimpleDateFormat dtf = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+        Date  now = Calendar.getInstance().getTime();
         Log.d("Image",""+image);
         String createdat= dtf.format(now).toString();
         System.out.println(dtf.format(now));
         List<String> likes= new ArrayList<String>();
         likes.add("11111");
-        Event event = new Event(title1,desc,time1,date1,image,email,createdat,likes);
+        Event event = new Event(title1,desc,time1,date1,image,email,createdat,place2,likes);
         Log.d("BHARATH111",""+event);
         Log.d("BHARATH111",""+dtf.format(now).toString());
         mDatabase.child("Events").child(dtf.format(now).toString()).setValue(event);

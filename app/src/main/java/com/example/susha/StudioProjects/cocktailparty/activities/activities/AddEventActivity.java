@@ -30,21 +30,26 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import org.joda.time.LocalDate;
+import org.joda.time.format.DateTimeFormat;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+//import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
+//import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Calendar;
+
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
 public class AddEventActivity extends AppCompatActivity {
     Calendar myCalendar ;
     private static List<String> likes;
-    EditText date,time,title,description;
+    EditText date,time,title,description,place;
     private static final int SELECT_PICTURE = 0;
     private ImageView imageView;
     private RatingBar ratingBar;
@@ -69,6 +74,7 @@ public class AddEventActivity extends AppCompatActivity {
         mDatabase = FirebaseDatabase.getInstance().getReference();
         description= (EditText) findViewById(R.id.description);
         time= (EditText) findViewById(R.id.time);
+        place= (EditText) findViewById(R.id.place1);
         imageView = (ImageView) findViewById(R.id.image);
         submit.setOnClickListener(new View.OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.O)
@@ -148,18 +154,20 @@ public class AddEventActivity extends AppCompatActivity {
         String date1=date.getText().toString();
         String time1=time.getText().toString();
         String image="";
+        String place1 = place.getText().toString();
         String email=FirebaseAuth.getInstance().getCurrentUser().getEmail().toString();
         if(!encodedImage.equalsIgnoreCase("")){
         image=encodedImage;}
-        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
-        LocalDateTime now = LocalDateTime.now();
+        Log.d("version",""+Build.VERSION.SDK_INT);
+        SimpleDateFormat dtf = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+        Date now = Calendar.getInstance().getTime();
         Log.d("Image",""+image);
         String createdat= dtf.format(now).toString();
-        //System.out.println(dtf.format(now));
-        Event event = new Event(title1,desc,time1,date1,image,email,createdat,likes);
+
+        Event event = new Event(title1,desc,time1,date1,image,email,createdat,place1,likes);
         Log.d("BHARATH111",""+event);
-        Log.d("BHARATH111",""+dtf.format(now).toString());
-        mDatabase.child("Events").child(dtf.format(now).toString()).setValue(event);
+        Log.d("BHARATH111",""+createdat);
+        mDatabase.child("Events").child(createdat).setValue(event);
         Intent i = new Intent(AddEventActivity.this,UsersActivity.class);
         startActivity(i);
         finish();

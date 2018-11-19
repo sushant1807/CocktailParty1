@@ -3,6 +3,7 @@ package com.example.susha.StudioProjects.cocktailparty.activities.helper;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.support.v7.widget.PopupMenu;
@@ -22,6 +23,7 @@ import com.example.susha.StudioProjects.cocktailparty.R;
 import com.example.susha.StudioProjects.cocktailparty.activities.activities.AddEventActivity;
 import com.example.susha.StudioProjects.cocktailparty.activities.activities.EditEvent;
 import com.example.susha.StudioProjects.cocktailparty.activities.activities.UsersActivity;
+import com.example.susha.StudioProjects.cocktailparty.activities.activities.ViewEventActivity;
 import com.example.susha.StudioProjects.cocktailparty.activities.model.Event;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
@@ -29,6 +31,8 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.Collections;
 import java.util.List;
+
+import static com.google.android.gms.flags.impl.SharedPreferencesFactory.getSharedPreferences;
 
 /**
  * Created by Ravi Tamada on 18/05/16.
@@ -39,19 +43,22 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MyViewHold
     private List<Event> albumList;
     List<Event> list;
     Context context;
+    private static SharedPreferences sharedpreferences;
+    private static SharedPreferences.Editor editor;
 
 
     public MoviesAdapter(List<Event> list, Context context) {
         Collections.reverse(list);
         this.list = list;
         this.mContext = context;
+
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
         public TextView title, count;
-        public ImageView image;
+        public ImageView image,contact;
         public ImageView thumbnail,like;
-        public TextView overflow,likes;
+        public TextView overflow,likes,place;
 
         public MyViewHolder(View view) {
             super(view);
@@ -61,7 +68,9 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MyViewHold
             likes = (TextView) view.findViewById(R.id.likes);
             thumbnail = (ImageView) view.findViewById(R.id.thumbnail);
             like = (ImageView) view.findViewById(R.id.like);
+            contact = (ImageView) view.findViewById(R.id.contact);
             overflow = (TextView) view.findViewById(R.id.overflow);
+            place = (TextView) view.findViewById(R.id.place);
 
         }
     }
@@ -74,6 +83,7 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MyViewHold
         View itemView = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.event_card, parent, false);
 
+
         return new MyViewHolder(itemView);
     }
 
@@ -82,6 +92,9 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MyViewHold
         final Event album = list.get(position);
         //Event event = album;
         int likesize= album.getLikes().size();
+        holder.place.setText(""+album.getPlace());
+
+
         holder.title.setText(album.getTitle()+"     ---     "+album.getDescription());
         holder.count.setText(album.getYear()+ "       "+album.getTime());
 
@@ -111,11 +124,15 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MyViewHold
 
         if(!FirebaseAuth.getInstance().getCurrentUser().getEmail().toString().equalsIgnoreCase(album.getEmail())){
             String email= album.getEmail();
+            holder.contact.setVisibility(View.VISIBLE);
 
             holder.overflow.setText(""+email.substring(0,email.indexOf("@")));
             holder.overflow.setTextSize(15);
            // holder.overflow.setVisibility(View.GONE);
 
+        }
+        else{
+            holder.contact.setVisibility(View.GONE);
         }
         if(!album.getImage().equalsIgnoreCase(""))
         {
@@ -131,9 +148,32 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MyViewHold
                 showPopupMenu(holder.overflow);
             }
         });
+        holder.thumbnail.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Constants.setImage(album.getImage());
+
+                Intent i = new Intent(mContext,ViewEventActivity.class);
+                i.putExtra("title", album.getTitle().toString());
+                i.putExtra("desc", album.getDescription().toString());
+                i.putExtra("date", album.getYear().toString());
+                i.putExtra("time", album.getTime().toString());
+                i.putExtra("place", album.getPlace().toString());
+
+
+                i.putExtra("createdat", album.getCreatedat().toString());
+                i.putExtra("likes", ""+album.getLikes().size());
+
+                //i.putExtra("image", album.getImage().toString());
+                i.putExtra("email", album.getEmail().toString());
+                ((Activity) mContext).startActivityForResult(i,1);
+
+            }
+        });
         holder.overflow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Constants.setImage(album.getImage());
 
                 Intent i = new Intent(mContext,EditEvent.class);
                 i.putExtra("title", album.getTitle().toString());
@@ -141,6 +181,7 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MyViewHold
                 i.putExtra("date", album.getYear().toString());
                 i.putExtra("time", album.getTime().toString());
                 i.putExtra("createdat", album.getCreatedat().toString());
+                i.putExtra("place", album.getPlace().toString());
                 //i.putExtra("likes", album.getLikes());
                  //i.putExtra("image", album.getImage().toString());
                 i.putExtra("email", album.getEmail().toString());

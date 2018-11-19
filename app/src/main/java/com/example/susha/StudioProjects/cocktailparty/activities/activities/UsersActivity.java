@@ -105,6 +105,7 @@ Log.d("bharathImage",""+image);
 
                     }}
                 }
+                if(list.size()>=1)
                 showPosts(list);
             }
 

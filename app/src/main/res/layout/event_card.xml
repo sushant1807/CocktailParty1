@@ -24,26 +24,80 @@
                 android:clickable="true"
                 android:scaleType="fitXY" />
 
+
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="15dp"
+                android:id="@+id/titl"
+                android:src="@drawable/event"
+                android:layout_below="@id/thumbnail"
+                android:layout_marginTop="12dp"
+
+
+
+                />
+
             <TextView
                 android:id="@+id/title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/thumbnail"
+                android:layout_toRightOf="@+id/titl"
+                android:text="Title"
                 android:paddingLeft="@dimen/album_title_padding"
                 android:paddingRight="@dimen/album_title_padding"
                 android:paddingTop="@dimen/album_title_padding"
                 android:textColor="@color/album_title"
                 android:textSize="@dimen/album_title" />
 
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="15dp"
+                android:id="@+id/datetime"
+                android:src="@drawable/date"
+                android:layout_below="@id/titl"
+                android:layout_marginTop="5dp"
+
+
+
+                />
+
             <TextView
                 android:id="@+id/count"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/title"
+                android:layout_toRightOf="@+id/datetime"
+                android:text="Date - Time"
                 android:paddingBottom="@dimen/songs_count_padding_bottom"
                 android:paddingLeft="@dimen/album_title_padding"
                 android:paddingRight="@dimen/album_title_padding"
                 android:textSize="@dimen/songs_count" />
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="15dp"
+                android:id="@+id/loc"
+                android:src="@drawable/location"
+                android:layout_below="@+id/count"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/count"
+                android:layout_toRightOf="@+id/loc"
+                android:layout_marginLeft="10px"
+                android:id="@+id/place"
+                android:text="place"
+                android:textSize="15dp"/>
+            <ImageView
+                android:id="@+id/contact"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:src="@drawable/contact"
+                android:layout_toLeftOf="@+id/overflow"
+                android:layout_marginTop="@dimen/ic_album_overflow_margin_top"
+                android:scaleType="centerCrop"
+                android:layout_below="@+id/thumbnail"/>
 
             <TextView
                 android:id="@+id/overflow"
@@ -54,6 +108,7 @@
                 android:layout_marginTop="@dimen/ic_album_overflow_margin_top"
                 android:scaleType="centerCrop"
                 android:text="Edit" />
+
             <ImageView
                 android:id="@+id/like"
                 android:layout_width="70px"
